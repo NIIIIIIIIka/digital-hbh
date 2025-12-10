@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/huangbinhong_visualization?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: 123456
+  web:
+    resources:
+#      static-locations:
+##        - file:///D:\IDEA\digital-huangbinhon\hbh-master  # 注意是 file:/// 三斜杠
+
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: org.qingliul.digitalhuangbinhon.entity
+
+server:
+  port: 8080
+
+logging:
+  level:
+    org.qingliul.digitalhuangbinhon: DEBUG
