@@ -56,6 +56,7 @@ mounted() {
     .hero-section {
         text-align: center;
         padding: 80px 20px;
+        margin-top: 60px;
         position: relative;
     }
 

@@ -8,4 +8,12 @@ import java.util.List;
 public interface TimelineEventMapper {
     List<TimelineEvent> findAllOrderByYear();
     TimelineEvent findById(@Param("eventId") Integer eventId);
-}
+    /* 新增：按地点查人生大事 */
+    @Select("SELECT timeline_id AS eventId, " +
+            "year, " +
+            "event_title AS title, " +
+            "event_detail AS description " +
+            "FROM life_timeline " +
+            "WHERE location_name = #{locationName} " +
+            "ORDER BY year ASC")
+    List<TimelineEvent> selectByLocation(@Param("locationName") String locationName);}

@@ -1,6 +1,7 @@
 package org.qingliul.digitalhuangbinhon.mapper;
 
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.qingliul.digitalhuangbinhon.entity.LifeTimeline;
 import org.qingliul.digitalhuangbinhon.entity.vo.LifeTimelineVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -22,4 +23,7 @@ public interface LifeTimelineMapper {
     // 查询生平事件关联的作品ID列表
     List<Integer> selectWorksIdsByTimelineId(Integer timelineId);
     List<Map<String, Object>> selectYearArtStats();
+
+
+
 }

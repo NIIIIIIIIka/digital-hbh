@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import '@/common-styles.css';
 import HeaderNavbar from './components/HeaderNavbar.vue';
 // import FooterNavbar from './components/FooterNavbar.vue';
 export default {

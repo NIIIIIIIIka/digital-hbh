@@ -2,6 +2,7 @@ package org.qingliul.digitalhuangbinhon.controller;
 
 import org.qingliul.digitalhuangbinhon.common.ApiResponse;
 import org.qingliul.digitalhuangbinhon.dto.*;
+import org.qingliul.digitalhuangbinhon.entity.TimelineEvent;
 import org.qingliul.digitalhuangbinhon.service.RelationshipService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,18 @@ public class RelationshipController {
     public ResponseEntity<ApiResponse<List<FootprintVo>>> footprints() {
         List<FootprintVo> data = relationshipService.getFootprints();
         return ResponseEntity.ok(ApiResponse.success(data));
+    }
+    @GetMapping("/location-events")
+    public ResponseEntity<ApiResponse<List<TimelineEvent>>> getLocationEvents(
+            @RequestParam("location") String location) {
+        logger.info("Request received: GET /api/huangbinhong/location-events location={}", location);
+        try {
+            List<TimelineEvent> events = relationshipService.getLocationEvents(location);
+            return ResponseEntity.ok(ApiResponse.success(events));
+        } catch (Exception e) {
+            logger.error("Error retrieving location events", e);
+            throw e;
+        }
     }
     /**
      * 获取时间轴事件

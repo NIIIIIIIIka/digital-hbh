@@ -14,8 +14,10 @@ public interface WorksService {
             String worksName,
             String category,
             String tags,
+            String artPeriod,
             Integer startYear,
             Integer endYear,
+
             Integer page,
             Integer size);
 

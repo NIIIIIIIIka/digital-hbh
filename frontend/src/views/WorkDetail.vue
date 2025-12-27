@@ -1,17 +1,16 @@
 <template>
   <div>
-    <!-- 外部样式 -->
-    <link rel="stylesheet" href="/common-styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
 
-    <!-- 主内容区 -->
     <div class="container">
+      <!-- 加载状态 -->
       <div class="loading-state" v-if="status === 'loading'">
         <div class="loading-icon"><i class="fas fa-spinner"></i></div>
         <h3>加载作品信息...</h3>
         <p>请稍候，正在获取作品详情</p>
       </div>
 
+      <!-- 错误状态 -->
       <div class="error-state" v-if="status === 'error'">
         <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
         <h3>加载失败</h3>
@@ -19,18 +18,21 @@
         <router-link to="/gallery" class="btn"><i class="fas fa-arrow-left"></i> 返回作品集</router-link>
       </div>
 
+      <!-- 正常内容 -->
       <div id="artworkContent" v-if="status === 'ready'">
         <h1>{{ works.worksName }}</h1>
 
         <div class="photo-detail">
           <div class="photo-container">
-            <img :src="mainImg" :alt="works.worksName" class="main-photo" @click="openViewer(mainImg, works.worksName)">
+            <img
+              :src="mainImg"
+              :alt="works.worksName"
+              class="main-photo"
+              @click="openViewer(mainImg, works.worksName)"
+            >
             <div class="image-actions">
               <button class="image-btn" title="放大查看" @click="openViewer(mainImg, works.worksName)">
                 <i class="fas fa-search-plus"></i>
-              </button>
-              <button class="image-btn" title="全屏查看" @click="openViewerFullscreen">
-                <i class="fas fa-expand"></i>
               </button>
             </div>
           </div>
@@ -39,14 +41,19 @@
             <h2 class="info-title">{{ works.worksName }}</h2>
 
             <div class="tags">
-              <span class="tag" v-for="t in tags" :key="t">{{ t }}</span>
+              <span
+                class="tag"
+                v-for="t in tags"
+                :key="t"
+                @click="goToTag(t)"
+              >{{ t }}</span>
             </div>
 
             <div class="info-item"><span class="info-label">作者：</span><span>黄宾虹</span></div>
-            <div class="info-item"><span class="info-label">创作年代：</span><span>{{ yearText }}</span></div>
+            <!-- 创作年代已删除 -->
             <div class="info-item"><span class="info-label">尺寸：</span><span>{{ works.size || '尺寸不详' }}</span></div>
             <div class="info-item"><span class="info-label">材质：</span><span>{{ works.material || '材质不详' }}</span></div>
-            <div class="info-item"><span class="info-label">收藏机构：</span><span>{{ works.collectionInstitution || '收藏机构不详' }}</span></div>
+            <!-- 收藏机构已删除 -->
             <div class="info-item"><span class="info-label">艺术时期：</span><span>{{ works.artPeriod || '时不详' }}</span></div>
 
             <div class="info-item">
@@ -66,8 +73,14 @@
     <div class="image-viewer" :class="{ active: viewerShow }" @click.self="closeViewer">
       <button class="close-viewer" @click="closeViewer">&times;</button>
       <div class="viewer-container">
-        <img :src="viewerSrc" :alt="viewerAlt" class="viewer-image" :style="viewerStyle"
-             @wheel.prevent="onWheel" @mousedown="onMouseDown">
+        <img
+          :src="viewerSrc"
+          :alt="viewerAlt"
+          class="viewer-image"
+          :style="viewerStyle"
+          @wheel.prevent="onWheel"
+          @mousedown.prevent="onMouseDown"
+        >
         <div class="viewer-controls">
           <button class="viewer-btn" title="放大" @click="zoomIn"><i class="fas fa-search-plus"></i></button>
           <button class="viewer-btn" title="缩小" @click="zoomOut"><i class="fas fa-search-minus"></i></button>
@@ -85,7 +98,6 @@ export default {
   name: 'WorkDetail',
   data() {
     return {
-      menuOpen: false,
       status: 'loading',
       errorMsg: '',
       works: {},
@@ -97,13 +109,14 @@ export default {
       viewerAlt: '',
       dragging: false,
       startX: 0,
-      startY: 0
+      startY: 0,
+      startTranslateX: 0,
+      startTranslateY: 0
     }
   },
   computed: {
     mainImg() {
-      const img = this.works.images?.[0]
-      return img ? `http://localhost:8080${img.imgUrl}` : ''
+      return this.works.images?.[0] ? `http://localhost:8080${this.works.images[0].imgUrl}` : ''
     },
     tags() {
       return this.works.tags?.length ? this.works.tags : ['无标签']
@@ -114,12 +127,13 @@ export default {
     viewerStyle() {
       return {
         transform: `translate(${this.x}px, ${this.y}px) scale(${this.scale})`,
-        cursor: this.dragging ? 'grabbing' : 'grab'
+        cursor: this.dragging ? 'grabbing' : 'grab',
+        userSelect: 'none'
       }
     }
   },
   mounted() {
-    window.scrollTo(0, 0);
+    window.scrollTo(0, 0)
     this.fetchWork()
     window.addEventListener('mouseup', this.onMouseUp)
     window.addEventListener('mousemove', this.onMouseMove)
@@ -146,6 +160,9 @@ export default {
         this.status = 'error'
       }
     },
+    goToTag(tag) {
+      this.$router.push({ path: '/gallery', query: { tag } })
+    },
     openViewer(src, alt) {
       this.viewerSrc = src
       this.viewerAlt = alt
@@ -154,6 +171,7 @@ export default {
       this.y = 0
       this.viewerShow = true
       document.body.style.overflow = 'hidden'
+      setTimeout(() => document.documentElement.requestFullscreen(), 100)
     },
     closeViewer() {
       this.viewerShow = false
@@ -178,10 +196,6 @@ export default {
         document.exitFullscreen()
       }
     },
-    openViewerFullscreen() {
-      this.openViewer(this.mainImg, this.works.worksName)
-      setTimeout(() => document.documentElement.requestFullscreen(), 100)
-    },
     onWheel(e) {
       const rect = e.currentTarget.getBoundingClientRect()
       const mx = e.clientX - rect.left
@@ -198,14 +212,17 @@ export default {
       }
     },
     onMouseDown(e) {
+      e.preventDefault()
       this.dragging = true
-      this.startX = e.clientX - this.x
-      this.startY = e.clientY - this.y
+      this.startX = e.clientX
+      this.startY = e.clientY
+      this.startTranslateX = this.x
+      this.startTranslateY = this.y
     },
     onMouseMove(e) {
       if (!this.dragging) return
-      this.x = e.clientX - this.startX
-      this.y = e.clientY - this.startY
+      this.x = this.startTranslateX + (e.clientX - this.startX)
+      this.y = this.startTranslateY + (e.clientY - this.startY)
     },
     onMouseUp() {
       this.dragging = false
@@ -220,6 +237,7 @@ export default {
   }
 }
 </script>
+
 
 <style>
 /* 与原页面完全一致的样式，仅移动到这里 */
@@ -372,6 +390,13 @@ h1 {
   padding: 3px 10px;
   font-size: 12px;
   color: #5c4033;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.tag:hover {
+  background-color: #d2b48c;
+  color: #fff;
+  transform: translateY(-2px);
 }
 .info-item {
   margin: 15px 0;
@@ -433,6 +458,9 @@ h1 {
   max-width: 100%;
   max-height: 90vh;
   object-fit: contain;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .viewer-controls {
   position: absolute;
@@ -549,4 +577,3 @@ h1 {
   margin-bottom: 20px;
 }
 </style>
-

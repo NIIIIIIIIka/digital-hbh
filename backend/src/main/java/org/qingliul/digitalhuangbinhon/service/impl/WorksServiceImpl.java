@@ -24,9 +24,11 @@ public class WorksServiceImpl implements WorksService {
                                             String worksName,
                                             String category,
                                             String tags,
+                                            String artPeriod,// ✅ 新增
                                             Integer startYear,
                                             Integer endYear,
                                             Integer page,
+
                                             Integer size) {
 
         page = (page == null || page < 1) ? 1 : page;
@@ -39,6 +41,7 @@ public class WorksServiceImpl implements WorksService {
         params.put("category", category);
         params.put("tags", tags);
         params.put("startYear", startYear);
+        params.put("art_period", artPeriod); // ✅ 新增
         params.put("endYear", endYear);
         params.put("start", start);
         params.put("size", size);
@@ -53,6 +56,7 @@ public class WorksServiceImpl implements WorksService {
             item.put("worksName", work.getWorksName());
             item.put("creationYear", work.getCreationYear());
             item.put("category", work.getCategory());
+            item.put("art_period", work.getArtPeriod());
             item.put("size", work.getSize());
             item.put("material", work.getMaterial());
             item.put("collectionInstitution", work.getCollectionInstitution());

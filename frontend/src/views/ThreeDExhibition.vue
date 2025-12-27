@@ -127,7 +127,7 @@ this.initInteraction();
         1000
       );
       this.camera.position.set(0, 10.6, 0);
-      this.camera.lookAt(-1000, 8.6, 0);
+      this.camera.lookAt(0, 0, 100);
 
       // 渲染器
       this.renderer = new THREE.WebGLRenderer({ 
@@ -255,7 +255,7 @@ this.initInteraction();
         this.corridorParams.length / 2
       );
       this.scene.add(leftWallLight.target);
-      leftWallLight.castShadow = true;
+      leftWallLight.castShadow = false;
       leftWallLight.shadow.mapSize.width = 2048;
       leftWallLight.shadow.mapSize.height = 2048;
       this.scene.add(leftWallLight);
@@ -263,7 +263,7 @@ this.initInteraction();
       // 右侧墙壁灯光
       const rightWallLight = new THREE.DirectionalLight(0xfff8e1, 2.5);
       rightWallLight.position.set(
-        this.corridorParams.width / 2 + 1,
+        this.corridorParams.width / 2 + 4,
         this.corridorParams.height / 2 - 2,
         this.corridorParams.length / 2
       );
@@ -273,7 +273,7 @@ this.initInteraction();
         this.corridorParams.length / 2
       );
       this.scene.add(rightWallLight.target);
-      rightWallLight.castShadow = true;
+      rightWallLight.castShadow = false;
       rightWallLight.shadow.mapSize.width = 2048;
       rightWallLight.shadow.mapSize.height = 2048;
       this.scene.add(rightWallLight);
@@ -315,7 +315,7 @@ this.initInteraction();
           // 检查是否已有关闭按钮
           if (!element.querySelector('.intro-close-button')) {
             const closeBtn = document.createElement('div');
-            closeBtn.className = 'intro-close-button';
+            closeBtn.className = 'intro-close-button';   // 统一类名
             closeBtn.innerHTML = '×';
             closeBtn.style.cssText = `
               position: absolute;
@@ -323,7 +323,7 @@ this.initInteraction();
               right: 10px;
               width: 30px;
               height: 30px;
-              background: rgba(139, 69, 19, 0.8);
+              background: rgba(139, 69, 19, 0.9);
               color: white;
               border-radius: 50%;
               display: flex;
@@ -332,10 +332,11 @@ this.initInteraction();
               font-size: 24px;
               cursor: pointer;
               z-index: 1000;
+              pointer-events: auto;   /* 关键：允许点击 */
               transition: all 0.3s;
             `;
             closeBtn.addEventListener('click', (e) => {
-              e.stopPropagation();
+              e.stopPropagation();     // 防止冒泡
               this.closeIntro();
             });
             closeBtn.addEventListener('mouseenter', () => {
@@ -343,10 +344,9 @@ this.initInteraction();
               closeBtn.style.transform = 'scale(1.1)';
             });
             closeBtn.addEventListener('mouseleave', () => {
-              closeBtn.style.background = 'rgba(139, 69, 19, 0.8)';
+              closeBtn.style.background = 'rgba(139, 69, 19, 0.9)';
               closeBtn.style.transform = 'scale(1)';
             });
-            
             element.style.position = 'relative';
             element.appendChild(closeBtn);
           }
@@ -602,14 +602,23 @@ initInteraction() {
     },
 
     updateCameraPosition() {
+      // 修改了这里
+      let direction = new THREE.Vector3();
+      this.camera.getWorldDirection(direction);
+      var directionZ=direction.z;
+      if (directionZ<0) {
+        directionZ=-1;
+      }else{
+        directionZ=1;
+      }
       if (this.keys.w || this.keys.ArrowUp) {
-        this.camera.position.z += this.moveSpeed;
-        this.camera.position.z = Math.min(this.camera.position.z, this.corridorParams.length - 5);
+        this.camera.position.z += this.moveSpeed*directionZ;
+        this.camera.position.z = Math.min(this.camera.position.z, this.corridorParams.length - 20);
       }
       
       if (this.keys.s || this.keys.ArrowDown) {
-        this.camera.position.z -= this.moveSpeed;
-        this.camera.position.z = Math.max(this.camera.position.z, 0);
+        this.camera.position.z -= this.moveSpeed*directionZ;
+        this.camera.position.z = Math.max(this.camera.position.z, 5);
       }
       
       const lookDirection = new THREE.Vector3(0, 0, 1);

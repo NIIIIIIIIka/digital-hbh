@@ -50,14 +50,14 @@ public class WorksController {
             @RequestParam(required = false) String works_name,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String art_period, // ✅ 新增
             @RequestParam(required = false) Integer startYear,
             @RequestParam(required = false) Integer endYear,
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "12") Integer size) {
 
         Map<String, Object> result = worksService.getWorksList(
-                creation_year, works_name, category,tags,
-                startYear, endYear, page, size);
+                creation_year, works_name, category, tags,art_period, startYear, endYear, page, size);
         return ResponseVO.success(result);
     }
     /**

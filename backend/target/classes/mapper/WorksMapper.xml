@@ -34,7 +34,9 @@
             <if test="startYear != null and endYear != null">
                 AND creation_year BETWEEN #{startYear} AND #{endYear}
             </if>
-
+            <if test="art_period != null and art_period != ''">
+                AND art_period = #{art_period}
+            </if>
             <!-- ✅ 多关键字精确匹配：每个词都必须出现在作品名中 -->
             <if test="worksName != null and worksName != ''">
                 <foreach collection="worksName.split(' ')" item="word" open="" close="" separator="">
@@ -53,6 +55,7 @@
                 )
             </if>
         </where>
+
         ORDER BY creation_year DESC
         <if test="start != null and size != null">
             LIMIT #{start}, #{size}
@@ -69,7 +72,9 @@
             <if test="creationYear != null">
                 AND creation_year = #{creationYear}
             </if>
-
+            <if test="art_period != null and art_period != ''">
+                AND art_period = #{art_period}
+            </if>
             <!-- ✅ 新增：年份区间筛选 -->
             <if test="startYear != null and endYear != null">
                 AND creation_year BETWEEN #{startYear} AND #{endYear}

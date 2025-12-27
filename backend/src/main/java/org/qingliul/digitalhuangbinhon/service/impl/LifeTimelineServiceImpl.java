@@ -47,6 +47,7 @@ public class LifeTimelineServiceImpl implements LifeTimelineService {
 
         return result;
     }
+
     @Override
     public List<Map<String, Object>> selectYearArtStats() {
         return lifeTimelineMapper.selectYearArtStats();
