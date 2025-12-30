@@ -28,8 +28,12 @@
       <section class="filters-section">
         <div class="filters-header">
           <h2 class="filters-title">作品筛选</h2>
+            <button class="toggle-filters-btn" @click="toggleFilters">
+    <i class="fas fa-chevron-up" v-if="!filtersCollapsed"></i>
+    <i class="fas fa-chevron-down" v-if="filtersCollapsed"></i>
+  </button>
         </div>
-
+<div  v-show="!filtersCollapsed">
         <div class="filter-row">
           <!-- 时期 -->
           <div class="filter-group">
@@ -119,6 +123,7 @@
             标签：{{  getTagLabel(selectedTag) }}<i class="fas fa-times" @click="selectedTag='all'"></i>
           </span>
         </div>
+        </div>
       </section>
 
       <!-- 作品网格、加载更多、空状态 … 以下全部原样 -->
@@ -129,7 +134,7 @@
           </div>
           <div class="artwork-info">
             <h3 class="artwork-title">{{ art.title }}</h3>
-            <div class="artwork-meta">{{ art.year }}年 · {{ art.size }} · {{ art.collection }}</div>
+            <div class="artwork-meta"> {{ art.size }} </div>
             <div class="artwork-description">{{ art.description }}</div>
             <div class="artwork-tags">
               <span v-for="t in art.tags" :key="t" class="artwork-tag" @click="selectArtworkTag(t)">{{ t }}</span>
@@ -161,6 +166,9 @@
         <p>正在加载作品...</p>
       </div>
     </main>
+    <button class="back-to-top" @click="scrollToTop" v-show="showBackToTop">
+      <i class="fas fa-arrow-up"></i>
+    </button>
   </body>
 </template>
 
@@ -172,6 +180,8 @@ export default {
   components: { HeaderNavbar },
   data() {
     return {
+      filtersCollapsed: true,
+      showBackToTop: true, 
       selectedPeriod: 'all',
       selectedType: '画',
       selectedTag: 'all', 
@@ -203,9 +213,23 @@ export default {
   mounted() {
     this.applyRouteTag()
     this.fetchWorks()
+    window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
     /* ===== 新增 URL tag 自动回显 ===== */
+      toggleFilters() {
+    this.filtersCollapsed = !this.filtersCollapsed; // 切换状态
+  },
+      scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // 平滑滚动
+    });
+  },
+  handleScroll() {
+    // 当滚动距离超过一定值时显示按钮
+    this.showBackToTop = window.scrollY > 200;
+  },
     applyRouteTag() {
       const tag = this.$route.query.tag
       if (!tag) return
@@ -303,7 +327,7 @@ export default {
         period: i.artPeriod || this.getPeriod(i.creationYear), // 优先用数据库的art_period
         thumbnail: i.thumbnailUrl ? `http://localhost:8080${i.thumbnailUrl}` : '/images/default.jpg',
         size: i.size || '尺寸不详',
-        collection: i.collectionInstitution || '收藏机构不详',
+        // collection: i.collectionInstitution || '收藏机构不详',
         description: i.worksDesc || '暂无简介',
         tags: i.tags || []
       }))
@@ -368,7 +392,11 @@ export default {
       this.fetchWorks(true)
     },
     viewArtworkDetail(id) { this.$router.push(`/work?id=${id}`) }
-  }
+  },
+  beforeDestroy() {
+  // 移除滚动事件监听
+  window.removeEventListener("scroll", this.handleScroll);
+},
 }
 </script>
 
@@ -401,9 +429,9 @@ body {
 }
 .page-header {
   text-align: center;
-  padding: 30px 20px;
+  padding: 20px 15px;
   border-radius: 15px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   margin-top: 40px;
 }
 .page-title {
@@ -422,8 +450,10 @@ body {
   background-color: white;
   border-radius: 8px;
   padding: 25px;
+    padding-bottom: 10px;
   margin: 0 60px;
-  margin-bottom: 30px;
+  margin-top: 0;
+  margin-bottom: 20px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 .filters-header {
@@ -726,6 +756,46 @@ body {
 .filters-section{
   border-top-left-radius:0;   /* 去掉左上角圆角 */
   margin-top:-1px;            /* 叠掉 1px 缝隙 */
+  
+}
+.back-to-top {
+    margin: 30px;
+    padding: 30px;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background-color: #d2b48c;
+  color: #fff;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s;
+}
+.back-to-top:hover {
+  background-color: #a67c52;
+  transform: scale(1.1);
+}
+.back-to-top:active {
+  transform: scale(0.9);
+}
+.toggle-filters-btn {
+  background: none;
+  border: none;
+  color: #5c4033;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.toggle-filters-btn:hover {
+  transform: scale(1.1);
 }
 @media (max-width: 768px) {
   .mobile-menu-btn {
@@ -737,5 +807,6 @@ body {
   .filter-bar {
     flex-direction: column;
   }
+  
 }
 </style>
