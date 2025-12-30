@@ -20,7 +20,7 @@
         <i class="fas fa-users"></i> 交游
       </a>
       <a href="/art-footprints" class="nav-item" :class="{ active: currentPage === 'footprints' }" @click="handleNavClick('footprints')">
-        <i class="fas fa-prints"></i> 轨迹
+        <i class="fas fa-shoe-prints"></i> 生平
       </a>
       <a href="/map" class="nav-item" :class="{ active: currentPage === 'about' }" @click="handleNavClick('about')">
         <i class="fas fa-book"></i> 地图
@@ -192,7 +192,9 @@ export default {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   }
   
-
+  .nav-menu.active {
+    display: flex;
+  }
   
   .nav-item {
     padding: 12px 20px;
