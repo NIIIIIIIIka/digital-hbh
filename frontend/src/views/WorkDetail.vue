@@ -1,20 +1,20 @@
 <template>
   <div>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css  ">
 
     <div class="container">
       <!-- 加载状态 -->
       <div class="loading-state" v-if="status === 'loading'">
         <div class="loading-icon"><i class="fas fa-spinner"></i></div>
         <h3>加载作品信息...</h3>
-        <p>请稍候，正在获取作品详情</p>
+        <p>请稍候，正在获取作品详情</p >
       </div>
 
       <!-- 错误状态 -->
       <div class="error-state" v-if="status === 'error'">
         <div class="error-icon"><i class="fas fa-exclamation-triangle"></i></div>
         <h3>加载失败</h3>
-        <p>{{ errorMsg }}</p>
+        <p>{{ errorMsg }}</p >
         <router-link to="/gallery" class="btn"><i class="fas fa-arrow-left"></i> 返回作品集</router-link>
       </div>
 
@@ -58,13 +58,14 @@
 
             <div class="info-item">
               <h3 class="info-title">作品简介：</h3>
-              <p class="description">{{ works.worksDesc || '暂无简介' }}</p>
-            </div>
-
-            <div class="action-buttons">
-              <router-link to="/gallery" class="btn"><i class="fas fa-arrow-left"></i> 返回作品集</router-link>
+              <p class="description">{{ works.worksDesc || '暂无简介' }}</p >
             </div>
           </div>
+        </div>
+
+        <!-- 仅移动原按钮到右下角 -->
+        <div class="back-to-gallery">
+          <router-link to="/gallery" class="btn"><i class="fas fa-arrow-left"></i> 返回作品集</router-link>
         </div>
       </div>
     </div>
@@ -240,8 +241,15 @@ export default {
 
 
 <style>
-/* 与原页面完全一致的样式，仅移动到这里 */
+/* 仅追加定位样式，其余保持原样 */
+.back-to-gallery {
+  position: fixed;
+  bottom: 60px;
+  right: 380px;
+  z-index: 999;
+}
 
+/* 以下样式完全不变 */
 * {
   margin: 0;
   padding: 0;
@@ -254,7 +262,6 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
-
 .logo {
   display: flex;
   align-items: center;
