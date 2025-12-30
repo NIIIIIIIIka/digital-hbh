@@ -1,5 +1,5 @@
 <template>
-<body>
+<div class="home-page">  <!-- 替换掉 <body> -->
     <!-- 主内容区 -->
     <main class="main-content">
         <!-- 英雄区域 -->
@@ -14,37 +14,44 @@
             </div>
         </section>
     </main>
-</body>
-
+</div>
 </template>
 
 <script>
-
 export default {
   name: 'HomePage',
-mounted() {
-},
-  methods:{
-
+  mounted() {
+    // 可以在这里添加组件挂载后的逻辑
+  },
+  methods: {  // 正确的语法：冒号 + 对象
+    // 如果需要，在这里添加方法
+    onImageClick() {
+      console.log('图片被点击');
+    }
   }
 }
 </script>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+/* 样式保持不变，但要修正背景图片路径 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    body {
-        font-family: "SimSun", "STSong", serif;
-        color: #333;
-        background: linear-gradient(135deg, #f5f0e6 0%, #e8dfca 100%);
-        min-height: 100vh;
-        overflow-x: hidden;
-    }
-
+.home-page {
+    font-family: "SimSun", "STSong", serif;
+    color: #333;
+    min-height: 100vh;
+    overflow-x: hidden;
+    /* 添加蒙版和背景图 - 修正图片路径 */
+    background: linear-gradient(rgba(245, 240, 230, 0.75), rgba(245, 240, 230, 0.75)), /* 蒙版 */
+                url('../assets/qiushan.jpg') no-repeat center 60% fixed; /* 背景图 */
+    background-size: 100% auto; /* 宽度100%填满，高度按比例自适应 */
+    background-attachment: fixed; /* 背景图固定 */
+    background-color: #f5f0e6; /* 顶部和底部可能会有空白，用颜色填充 */
+}
     /* 主内容区 */
     .main-content {
         padding-top: 100px;
@@ -76,6 +83,7 @@ mounted() {
         color: #5c4033;
         margin-bottom: 15px;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        font-weight: 700; /* 加粗标题 */
     }
 
     .hero-subtitle {
@@ -84,13 +92,23 @@ mounted() {
         max-width: 800px;
         margin: 0 auto 30px;
         line-height: 1.6;
+        font-weight: 600; /* 加粗副标题 */
     }
 
     .lifespan {
         font-size: 18px;
         color: #a67c52;
         margin-bottom: 40px;
-        font-weight: bold;
+        font-weight: 700; /* 加粗生卒年份 */
+    }
+
+    .hero-quote {
+        font-size: 18px;
+        color: #8b4513;
+        font-style: italic;
+        max-width: 600px;
+        margin: 0 auto;
+        font-weight: 600; /* 加粗名言 */
     }
 
     .copyright {
@@ -101,32 +119,38 @@ mounted() {
 
     /* 响应式设计 */
     @media (max-width: 768px) {
-
-        
         .mobile-menu-btn {
             display: block;
         }
         
         .hero-title {
             font-size: 36px;
+            font-weight: 700; /* 移动端也保持加粗 */
         }
         
         .hero-subtitle {
             font-size: 18px;
+            font-weight: 600; /* 移动端也保持加粗 */
         }
     
-    .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
     
-    .features-grid {
-        grid-template-columns: 1fr;
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .lifespan {
+            font-weight: 700; /* 移动端也保持加粗 */
+        }
+        
+        .hero-quote {
+            font-weight: 600; /* 移动端也保持加粗 */
+        }
     }
-}
-
-
 
     /* 模态框 */
     .modal {
@@ -167,6 +191,7 @@ mounted() {
         color: #5c4033;
         margin-bottom: 20px;
         font-size: 24px;
+        font-weight: 700; /* 加粗模态框标题 */
     }
 
     .modal-text {
@@ -192,11 +217,13 @@ mounted() {
     .modal-btn.confirm {
         background-color: #d2b48c;
         color: #333;
+        font-weight: 600; /* 加粗确认按钮 */
     }
 
     .modal-btn.cancel {
         background-color: #f0e6d6;
         color: #666;
         border: 1px solid #d2b48c;
+        font-weight: 600; /* 加粗取消按钮 */
     }
 </style>
