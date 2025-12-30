@@ -603,9 +603,9 @@ initInteraction() {
 
     updateCameraPosition() {
       // 修改了这里
-      let direction = new THREE.Vector3();
+      const direction = new THREE.Vector3();
       this.camera.getWorldDirection(direction);
-      var directionZ=direction.z;
+      const directionZ=direction.z;
       if (directionZ<0) {
         directionZ=-1;
       }else{
